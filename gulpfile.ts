@@ -10,7 +10,7 @@ gulp.task('test', test)
 gulp.task('e2e', e2e)
 
 async function boil (): Promise<void> {
-  execute('node ./node_modules/@pizza-programming-party/centralized-package-boilerplate/bin/run.js')
+  execute('node ./node_modules/centralized-boilerplate.package/bin/run.js')
 }
 
 async function build (): Promise<void> {

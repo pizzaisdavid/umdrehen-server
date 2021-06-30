@@ -1,0 +1,17 @@
+# This file is managed by a centralized-boilerplate package
+
+# Do not publish Typescript things
+/src
+tsconfig.json
+
+# Do not publish test files
+/e2e
+*.spec.*
+*.e2e-spec.*
+
+# Do not publish gulpfile
+gulpfile.ts
+/dist/gulpfile.*
+
+# Publish everything in the assets folder
+!/assets/*

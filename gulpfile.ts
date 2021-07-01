@@ -10,28 +10,59 @@ gulp.task('test', test)
 gulp.task('e2e', e2e)
 
 async function boil (): Promise<void> {
-  execute('node ./node_modules/centralized-boilerplate.package/bin/run.js')
+  await execute('node ./node_modules/centralized-boilerplate.package/bin/run.js')
 }
 
 async function build (): Promise<void> {
-  execute('rm -rf dist')
-  execute('tsc')
+  await execute('rm -rf dist')
+  await execute('tsc')
 }
 
 async function lint (): Promise<void> {
-  execute('ts-standard --project ./tsconfig.json')
+  await execute('ts-standard --project ./tsconfig.json')
 }
 
 async function test (): Promise<void> {
-  build()
-  execute('jasmine dist/src/**/*.spec.js')
+  await build()
+  await execute('jasmine dist/src/**/*.spec.js')
 }
 
 async function e2e (): Promise<void> {
-  build()
-  execute('jasmine dist/e2e/**/*.e2e-spec.js')
+  await build()
+  await execute('jasmine dist/e2e/**/*.e2e-spec.js')
 }
 
-function execute(command: string) {
-  child.execSync(command)
+export async function execute (
+  command: string,
+  options?: {
+    cwd: string
+  }
+): Promise<void> {
+  process.stdout.write(`executing... "${command}"\n`)
+  await run(command, options)
+  process.stdout.write(`finished... "${command}"\n`)
+}
+
+async function run (
+  command: string,
+  options?: {
+    cwd: string
+  }
+): Promise<void> {
+  return await new Promise((resolve, reject) => {
+    const stream = child.exec(command, options, (error) => {
+      if (error !== null) {
+        return reject(error)
+      }
+      resolve()
+    })
+
+    if (stream.stdout !== null) {
+      stream.stdout.pipe(process.stdout)
+    }
+
+    if (stream.stderr !== null) {
+      stream.stderr.pipe(process.stderr)
+    }
+  })
 }

@@ -1,0 +1,19 @@
+name: CI
+
+on: [push]
+
+jobs:
+  whatever:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install
+        run: npm install
+      - name: build
+        run: npm run build
+      - name: lint
+        run: npm run lint
+      - name: test
+        run: npm urn test
+      - name: e2e
+        run: npm run e2e

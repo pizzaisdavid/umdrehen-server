@@ -1,1 +1,4 @@
-console.log('yo')
+
+export {
+  GetHealthResponse
+} from './health'

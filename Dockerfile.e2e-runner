@@ -1,0 +1,15 @@
+# TODO: move to boilerplate.
+#
+# This Dockerfile is used for running the e2e tests.
+
+FROM node:14.16.1
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY . ./
+
+ENTRYPOINT [ "./node_modules/jasmine/bin/jasmine.js", "./dist/**/*.e2e-spec.js" ]

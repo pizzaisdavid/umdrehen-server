@@ -1,0 +1,17 @@
+
+# This Dockerfile is used for production or as a dependency.
+#
+# TODO: move to boilerplate.
+
+FROM node:14.16.1
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm install --production
+
+COPY . ./
+
+EXPOSE 36361
+ENTRYPOINT [ "node", "./dist/src/server/server.js" ]

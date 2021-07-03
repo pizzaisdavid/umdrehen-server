@@ -9,6 +9,13 @@ import { health } from './health'
 
 console.log('It is running here', __dirname)
 
+
+process.on('uncaughtException', (error) => {
+  console.log(error)
+  console.log('yo!')
+})
+
+
 const led = new Gpio(17, 'out')
 
 let state: BinaryValue = 0

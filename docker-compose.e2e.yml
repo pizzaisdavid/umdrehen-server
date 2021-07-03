@@ -1,0 +1,28 @@
+# TODO: move to centralized-package.
+
+version: "2.1"
+services:
+
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.production
+    ports:
+    - "25001:36361"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:36361/v1/health"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    volumes:
+    - /var/log/ppp/swift/:/var/log/ppp/swift/
+
+  e2e:
+    build:
+      context: ./
+      dockerfile: Dockerfile.e2e-runner
+    depends_on:
+      backend:
+        condition: service_healthy
+    links:
+    - backend

@@ -9,7 +9,7 @@
     "build": "gulp build",
     "lint": "gulp lint",
     "test": "gulp test",
-    "e2e": "gulp e2e",
+    "e2e": "npm run build && docker-compose --file ./docker-compose.e2e.yml up --build --abort-on-container-exit && docker-compose --file ./docker-compose.e2e.yml down",
     "boil": "gulp boil"
   },
   "author": "",

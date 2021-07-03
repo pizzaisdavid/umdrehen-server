@@ -1,52 +1,25 @@
 
-import {
-  GetHealthResponse
-} from '../server'
-
 import * as WebSocket from 'ws'
 
-export interface Http {
-  get: <T>(url: string) => Promise<T>
-  post: <T>(url: string, body: any) => Promise<T>
-  delete: <T>(url: string) => Promise<T>
-}
-
 export class Client {
+  private socket: WebSocket
+
   constructor(
-    private readonly baseUrl: string,
-    private readonly http: Http,
-    private readonly ws: WebSocket
+    private readonly baseUrl: string
   ) {
-
+    this.socket = new WebSocket(baseUrl)
   }
 
-  async getHealth (
-  ): Promise<GetHealthResponse> {
-    return await this.get('/v1/health')
-  }
-
-  async sendMessage (
-    text: string
-  ): Promise<void> {
+  async toggle(
+  ): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.ws.send('message', (error) => {
-        if (error) {
-          return reject()
-        }
-        resolve()
+      this.socket.once('message', (socket: WebSocket, data: WebSocket.Data) => {
+        resolve(data === 'true' ? true : false)
+        return
+      })
+      this.socket.send('toggle', () => {
+        console.log('toggle sent')
       })
     })
-  }
-
-  private async get<T> (
-    resource: string
-  ): Promise<T> {
-    return await this.http.get(this.formatUrl(resource))
-  }
-
-  private formatUrl (
-    resource: string
-  ): string {
-    return this.baseUrl + resource
   }
 }

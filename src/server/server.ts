@@ -14,7 +14,7 @@ console.log('It is running here', __dirname)
 
 
 const board = new Hydrangea()
-const pin = board.createPin({ id: 17, direction: System.Direction.Out })
+const pin = board.createPin({ id: '17' as any, direction: System.Direction.Out })
 
 let state: boolean = false
 pin.write(state)

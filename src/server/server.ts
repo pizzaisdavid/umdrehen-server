@@ -5,7 +5,6 @@ import * as WebSocket from 'ws'
 
 import {
   Hydrangea,
-  HydrangeaMock,
   System
 } from 'hydrangea'
 
@@ -14,7 +13,7 @@ import { health } from './health'
 console.log('It is running here', __dirname)
 
 
-const board = new HydrangeaMock()
+const board = new Hydrangea()
 const pin = board.createPin({ id: 17, direction: System.Direction.Out })
 
 let state: boolean = false

@@ -8,10 +8,7 @@ import {
   System
 } from 'hydrangea'
 
-import { health } from './health'
-
 console.log('It is running here', __dirname)
-
 
 const board = new Hydrangea()
 const pin = board.createPin({ id: '17' as any, direction: System.Direction.Out })
@@ -23,7 +20,21 @@ const application = express()
 const server = http.createServer(application)
 const web = new WebSocket.Server({ server })
 
-application.use('/v1/health', health)
+application.use('/v1/health', (
+  request: express.Request,
+  response: express.Response<any>
+) => {
+  state = !state
+  pin.write(state)
+    .then(() => {
+      console.log('toggled', state)
+      response
+        .status(200)
+        .json({ status: 'yep!' })
+        .end()
+    })
+  }
+)
 
 web.on('connection', (socket) => {
   console.log('connection')

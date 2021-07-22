@@ -5,7 +5,7 @@ describe('toggle', () => {
   let backend: Backend.Client
 
   beforeEach(async () => {
-    backend = new Backend.Client('ws://backend:36361')
+    backend = await Backend.Client.create('ws://backend:36361/')
   })
 
   it('turn on', async () => {

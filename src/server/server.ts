@@ -3,23 +3,22 @@ import * as express from 'express'
 import * as http from 'http'
 import * as WebSocket from 'ws'
 
-import { Gpio, BinaryValue } from 'onoff'
+import {
+  Hydrangea,
+  HydrangeaMock,
+  System
+} from 'hydrangea'
 
 import { health } from './health'
 
 console.log('It is running here', __dirname)
 
 
-process.on('uncaughtException', (error) => {
-  console.log(error)
-  console.log('yo!')
-})
+const board = new HydrangeaMock()
+const pin = board.createPin({ id: 17, direction: System.Direction.Out })
 
-
-const led = new Gpio(17, 'out')
-
-let state: BinaryValue = 0
-led.writeSync(state)
+let state: boolean = false
+pin.write(state)
 
 const application = express()
 const server = http.createServer(application)
@@ -34,16 +33,17 @@ web.on('connection', (socket) => {
     console.log('message', message)
 
     if (message === 'toggle') {
-      state = (state === 0) ? 1 : 0
-      led.writeSync(state)
-      socket.send('toggled', () => {
-        console.log('sent whatup?')
-      })
+      state = !state
+      pin.write(state)
+        .then(() => {
+          console.log('toggled', state)
+          socket.emit('toggled', state)
+        })
     }
   })
 })
 
-const port = 36361
+const port = 18170
 server.listen(port, () => {
   console.log(`running on http://localhost:${port}/v1/health`)
 })

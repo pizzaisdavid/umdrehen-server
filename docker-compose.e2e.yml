@@ -7,8 +7,6 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile.production
-    ports:
-    - "25001:36361"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:36361/v1/health"]
       interval: 5s
